@@ -11,6 +11,7 @@ import (
 type SmiType struct {
 	models.Type
 	smiType *types.SmiType
+	handle  *smi.Handle
 }
 
 func (t *SmiType) getEnum() {
@@ -39,7 +40,7 @@ func (t *SmiType) getEnum() {
 
 func (t *SmiType) GetModule() (module SmiModule) {
 	smiModule := smi.GetTypeModule(t.smiType)
-	return CreateModule(smiModule)
+	return CreateModule(smiModule, t.handle)
 }
 
 func (t *SmiType) getRanges() {
@@ -74,11 +75,11 @@ func (t *SmiType) SetRaw(smiType *types.SmiType) {
 	t.smiType = smiType
 }
 
-func CreateType(smiType *types.SmiType) (outType SmiType) {
+func CreateType(smiType *types.SmiType, handle *smi.Handle) (outType SmiType) {
 	if smiType == nil {
 		return
 	}
-
+	outType.handle = handle
 	outType.SetRaw(smiType)
 	outType.BaseType = smiType.BaseType
 
@@ -100,14 +101,14 @@ func CreateType(smiType *types.SmiType) (outType SmiType) {
 	return
 }
 
-func CreateTypeFromNode(smiNode *types.SmiNode) (outType *SmiType) {
+func CreateTypeFromNode(smiNode *types.SmiNode, handle *smi.Handle) (outType *SmiType) {
 	smiType := smi.GetNodeType(smiNode)
 
 	if smiType == nil {
 		return
 	}
 
-	tempType := CreateType(smiType)
+	tempType := CreateType(smiType, handle)
 	outType = &tempType
 
 	if smiNode.Format != "" {
@@ -135,7 +136,7 @@ func GetType(name string, module ...*SmiModule) (outType SmiType, err error) {
 		}
 		return
 	}
-	return CreateType(smiType), nil
+	return CreateType(smiType, smi.DefaultSmiHandle), nil
 }
 
 func convertValue(value types.SmiValue) (outValue int64) {

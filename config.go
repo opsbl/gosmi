@@ -25,3 +25,7 @@ func AppendFS(fs ...smi.NamedFS)                 { smi.AppendFS(fs...) }
 func PrependFS(fs ...smi.NamedFS)                { smi.PrependFS(fs...) }
 
 func ReadConfig(filename string, tag ...string) error { return smi.ReadConfig(filename, tag...) }
+
+func SetMaxRecursionDepth(depth int) {
+	smi.DefaultSmiHandle.SetMaxRecursionDepth(depth)
+}

@@ -9,17 +9,17 @@ import (
 
 // GetNode C -> SmiNode *smiGetNode(SmiModule *smiModulePtr, const char *name)
 func GetNode(smiModulePtr *types.SmiModule, name string) *types.SmiNode {
-	return smiHandle.GetNode(smiModulePtr, name)
+	return DefaultSmiHandle.GetNode(smiModulePtr, name)
 }
 
 // GetNodeByOID C -> SmiNode *smiGetNodeByOID(unsigned int oidlen, SmiSubid oid[])
 func GetNodeByOID(oid types.Oid) *types.SmiNode {
-	return smiHandle.GetNodeByOID(oid)
+	return DefaultSmiHandle.GetNodeByOID(oid)
 }
 
 // GetFirstNode C -> SmiNode *smiGetFirstNode(SmiModule *smiModulePtr, SmiNodekind nodekind)
 func GetFirstNode(smiModulePtr *types.SmiModule, nodekind types.NodeKind) *types.SmiNode {
-	return smiHandle.GetFirstNode(smiModulePtr, nodekind)
+	return DefaultSmiHandle.GetFirstNode(smiModulePtr, nodekind)
 }
 
 // GetNextNode C -> SmiNode *smiGetNextNode(SmiNode *smiNodePtr, SmiNodekind nodekind)
@@ -57,7 +57,7 @@ func GetNextNode(smiNodePtr *types.SmiNode, nodekind types.NodeKind) *types.SmiN
 
 // GetParentNode C -> SmiNode *smiGetParentNode(SmiNode *smiNodePtr)
 func GetParentNode(smiNodePtr *types.SmiNode) *types.SmiNode {
-	return smiHandle.GetParentNode(smiNodePtr)
+	return DefaultSmiHandle.GetParentNode(smiNodePtr)
 }
 
 // GetRelatedNode C -> SmiNode *smiGetRelatedNode(SmiNode *smiNodePtr)

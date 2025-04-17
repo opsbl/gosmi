@@ -78,7 +78,10 @@ func (x *Module) AddRevision(revision *Revision) {
 	}
 }
 
-func (x *Module) GetObject(name types.SmiIdentifier) *Object {
+func (x *Module) getObject(name types.SmiIdentifier, depth int) *Object {
+	if depth > x.Handle.GetMaxRecursionDepth() {
+		return nil
+	}
 	obj := x.Objects.Get(name)
 	if obj != nil {
 		return obj
@@ -103,10 +106,17 @@ func (x *Module) GetObject(name types.SmiIdentifier) *Object {
 	if err != nil {
 		return nil
 	}
-	return module.GetObject(name)
+	return module.getObject(name, depth+1)
 }
 
-func (x *Module) GetType(name types.SmiIdentifier) *Type {
+func (x *Module) GetObject(name types.SmiIdentifier) *Object {
+	return x.getObject(name, 0)
+}
+
+func (x *Module) getType(name types.SmiIdentifier, depth int) *Type {
+	if depth > x.Handle.GetMaxRecursionDepth() {
+		return nil
+	}
 	t := x.Types.Get(name)
 	if t != nil {
 		return t
@@ -120,7 +130,11 @@ func (x *Module) GetType(name types.SmiIdentifier) *Type {
 	if err != nil {
 		return nil
 	}
-	return module.GetType(i.Name)
+	return module.getType(i.Name, depth+1)
+}
+
+func (x *Module) GetType(name types.SmiIdentifier) *Type {
+	return x.getType(name, 0)
 }
 
 func (x *Module) IsWellKnown() bool {
@@ -340,7 +354,18 @@ func (h *Handle) GetModule(name string) (*Module, error) {
 	if module != nil {
 		return module, nil
 	}
-	return h.LoadModule(name)
+
+	if h.currentLoadingModule == name {
+		return nil, errors.New("load a module that is being processed")
+	}
+
+	if h.currentLoadingModule == "" {
+		h.currentLoadingModule = name
+	}
+
+	_module, err := h.LoadModule(name)
+	h.currentLoadingModule = ""
+	return _module, err
 }
 
 func (h *Handle) LoadModule(name string) (*Module, error) {

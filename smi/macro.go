@@ -9,7 +9,7 @@ import (
 
 // GetMacro C -> SmiMacro *smiGetMacro(SmiModule *smiModulePtr, char *macro)
 func GetMacro(smiModulePtr *types.SmiModule, macro string) *types.SmiMacro {
-	return smiHandle.GetMacro(smiModulePtr, macro)
+	return DefaultSmiHandle.GetMacro(smiModulePtr, macro)
 }
 
 // GetFirstMacro C -> SmiMacro *smiGetFirstMacro(SmiModule *smiModulePtr)

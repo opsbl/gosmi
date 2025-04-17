@@ -10,6 +10,7 @@ import (
 type SmiModule struct {
 	models.Module
 	smiModule *types.SmiModule
+	handle    *smi.Handle
 }
 
 func (m *SmiModule) GetIdentityNode() (node SmiNode, ok bool) {
@@ -17,7 +18,7 @@ func (m *SmiModule) GetIdentityNode() (node SmiNode, ok bool) {
 	if smiIdentityNode == nil {
 		return
 	}
-	return CreateNode(smiIdentityNode), true
+	return CreateNode(smiIdentityNode, m.handle), true
 }
 
 func (m *SmiModule) GetImports() (imports []models.Import) {
@@ -32,7 +33,13 @@ func (m *SmiModule) GetImports() (imports []models.Import) {
 }
 
 func (m *SmiModule) GetNode(name string) (node SmiNode, err error) {
-	return GetNode(name, *m)
+	smiModule := m.GetRaw()
+	smiNode := m.handle.GetNode(smiModule, name)
+	if smiNode == nil {
+		err = fmt.Errorf("could not find node named %s", name)
+		return
+	}
+	return CreateNode(smiNode, m.handle), nil
 }
 
 func (m *SmiModule) GetNodes(kind ...types.NodeKind) (nodes []SmiNode) {
@@ -40,8 +47,8 @@ func (m *SmiModule) GetNodes(kind ...types.NodeKind) (nodes []SmiNode) {
 	if len(kind) > 0 && kind[0] != types.NodeUnknown {
 		nodeKind = kind[0]
 	}
-	for smiNode := smi.GetFirstNode(m.smiModule, nodeKind); smiNode != nil; smiNode = smi.GetNextNode(smiNode, nodeKind) {
-		nodes = append(nodes, CreateNode(smiNode))
+	for smiNode := m.handle.GetFirstNode(m.smiModule, nodeKind); smiNode != nil; smiNode = smi.GetNextNode(smiNode, nodeKind) {
+		nodes = append(nodes, CreateNode(smiNode, m.handle))
 	}
 	return
 }
@@ -58,12 +65,18 @@ func (m *SmiModule) GetRevisions() (revisions []models.Revision) {
 }
 
 func (m *SmiModule) GetType(name string) (outType SmiType, err error) {
-	return GetType(name, m)
+	smiModule := m.GetRaw()
+	smiType := m.handle.GetType(smiModule, name)
+	if smiType == nil {
+		err = fmt.Errorf("could not find type named %s", name)
+		return
+	}
+	return CreateType(smiType, m.handle), nil
 }
 
 func (m *SmiModule) GetTypes() (types []SmiType) {
 	for smiType := smi.GetFirstType(m.smiModule); smiType != nil; smiType = smi.GetNextType(smiType) {
-		types = append(types, CreateType(smiType))
+		types = append(types, CreateType(smiType, m.handle))
 	}
 	return
 }
@@ -76,7 +89,7 @@ func (m *SmiModule) SetRaw(smiModule *types.SmiModule) {
 	m.smiModule = smiModule
 }
 
-func CreateModule(smiModule *types.SmiModule) (module SmiModule) {
+func CreateModule(smiModule *types.SmiModule, handle *smi.Handle) (module SmiModule) {
 	return SmiModule{
 		Module: models.Module{
 			ContactInfo:  smiModule.ContactInfo,
@@ -88,6 +101,7 @@ func CreateModule(smiModule *types.SmiModule) (module SmiModule) {
 			Reference:    smiModule.Reference,
 		},
 		smiModule: smiModule,
+		handle:    handle,
 	}
 }
 
@@ -101,7 +115,7 @@ func LoadModule(modulePath string) (string, error) {
 
 func GetLoadedModules() (modules []SmiModule) {
 	for smiModule := smi.GetFirstModule(); smiModule != nil; smiModule = smi.GetNextModule(smiModule) {
-		modules = append(modules, CreateModule(smiModule))
+		modules = append(modules, CreateModule(smiModule, smi.DefaultSmiHandle))
 	}
 	return
 }
@@ -116,5 +130,5 @@ func GetModule(name string) (module SmiModule, err error) {
 		err = fmt.Errorf("could not find module named %s", name)
 		return
 	}
-	return CreateModule(smiModule), nil
+	return CreateModule(smiModule, smi.DefaultSmiHandle), nil
 }

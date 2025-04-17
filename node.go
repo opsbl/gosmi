@@ -12,18 +12,19 @@ type SmiNode struct {
 	models.Node
 	smiNode *types.SmiNode
 	SmiType *SmiType
+	handle  *smi.Handle
 }
 
 func (n *SmiNode) GetModule() (module SmiModule) {
 	smiModule := smi.GetNodeModule(n.smiNode)
-	return CreateModule(smiModule)
+	return CreateModule(smiModule, n.handle)
 }
 
 func (n *SmiNode) GetSubtree() (nodes []SmiNode) {
 	first := true
 	smiNode := n.smiNode
 	for oidlen := n.OidLen; smiNode != nil && (first || int(smiNode.OidLen) > oidlen); smiNode = smi.GetNextNode(smiNode, types.NodeAny) {
-		node := CreateNode(smiNode)
+		node := CreateNode(smiNode, n.handle)
 		nodes = append(nodes, node)
 		first = false
 	}
@@ -50,7 +51,7 @@ func (n *SmiNode) SetRaw(smiNode *types.SmiNode) {
 	n.smiNode = smiNode
 }
 
-func CreateNode(smiNode *types.SmiNode) SmiNode {
+func CreateNode(smiNode *types.SmiNode, handle *smi.Handle) SmiNode {
 	node := SmiNode{
 		Node: models.Node{
 			Access:      smiNode.Access,
@@ -63,7 +64,8 @@ func CreateNode(smiNode *types.SmiNode) SmiNode {
 			Status:      smiNode.Status,
 		},
 		smiNode: smiNode,
-		SmiType: CreateTypeFromNode(smiNode),
+		SmiType: CreateTypeFromNode(smiNode, handle),
+		handle:  handle,
 	}
 	if node.SmiType != nil {
 		node.Type = &node.SmiType.Type
@@ -86,7 +88,7 @@ func GetNode(name string, module ...SmiModule) (node SmiNode, err error) {
 		}
 		return
 	}
-	return CreateNode(smiNode), nil
+	return CreateNode(smiNode, smi.DefaultSmiHandle), nil
 }
 
 func GetNodeByOID(oid types.Oid) (node SmiNode, err error) {
@@ -95,5 +97,5 @@ func GetNodeByOID(oid types.Oid) (node SmiNode, err error) {
 		err = fmt.Errorf("could not find node for OID %s", oid)
 		return
 	}
-	return CreateNode(smiNode), nil
+	return CreateNode(smiNode, smi.DefaultSmiHandle), nil
 }

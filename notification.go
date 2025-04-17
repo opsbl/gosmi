@@ -23,7 +23,7 @@ func (n *SmiNode) GetNotificationObjects() (objects []SmiNode) {
 			// TODO: error
 			return
 		}
-		objects = append(objects, CreateNode(object))
+		objects = append(objects, CreateNode(object, n.handle))
 	}
 	return
 }

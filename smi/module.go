@@ -11,7 +11,7 @@ import (
 // LoadModule C -> char *smiLoadModule(const char *module)
 func LoadModule(module string) string {
 	checkInit()
-	modulePtr, err := smiHandle.GetModule(module)
+	modulePtr, err := DefaultSmiHandle.GetModule(module)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -24,7 +24,7 @@ func LoadModule(module string) string {
 // IsLoaded C -> int smiIsLoaded(const char *module)
 func IsLoaded(module string) bool {
 	checkInit()
-	return smiHandle.FindModuleByName(module) != nil
+	return DefaultSmiHandle.FindModuleByName(module) != nil
 }
 
 // GetModule C -> SmiModule *smiGetModule(const char *module)
@@ -32,7 +32,7 @@ func GetModule(module string) *types.SmiModule {
 	if module == "" {
 		return nil
 	}
-	modulePtr, _ := smiHandle.GetModule(module)
+	modulePtr, _ := DefaultSmiHandle.GetModule(module)
 	if modulePtr == nil {
 		return nil
 	}
@@ -41,7 +41,7 @@ func GetModule(module string) *types.SmiModule {
 
 // GetFirstModule C -> SmiModule *smiGetFirstModule(void)
 func GetFirstModule() *types.SmiModule {
-	modulePtr := smiHandle.GetFirstModule()
+	modulePtr := DefaultSmiHandle.GetFirstModule()
 	if modulePtr == nil {
 		return nil
 	}

@@ -1,6 +1,6 @@
 module github.com/opsbl/gosmi
 
-go 1.24.1
+go 1.16
 
 require (
 	github.com/alecthomas/participle v0.7.1

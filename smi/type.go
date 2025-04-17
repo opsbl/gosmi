@@ -9,7 +9,7 @@ import (
 
 // GetType C -> SmiType *smiGetType(SmiModule *smiModulePtr, char *type)
 func GetType(smiModulePtr *types.SmiModule, typeName string) *types.SmiType {
-	return smiHandle.GetType(smiModulePtr, typeName)
+	return DefaultSmiHandle.GetType(smiModulePtr, typeName)
 }
 
 // GetFirstType C -> SmiType *smiGetFirstType(SmiModule *smiModulePtr)

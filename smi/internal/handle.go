@@ -8,6 +8,7 @@ import (
 )
 
 const WellKnownModuleName types.SmiIdentifier = "<well-known>"
+const DefaultMaxRecursionDepth = 10000
 
 var (
 	WellKnownIdCcitt         types.SmiSubId = 0
@@ -32,6 +33,20 @@ type Handle struct {
 	CacheProg            string
 	ErrorLevel           int
 	ErrorHandler         types.SmiErrorHandler
+	MaxRecursionDepth    *int
+
+	currentLoadingModule string
+}
+
+func (h *Handle) SetMaxRecursionDepth(depth int) {
+	h.MaxRecursionDepth = &depth
+}
+
+func (h *Handle) GetMaxRecursionDepth() int {
+	if h.MaxRecursionDepth == nil {
+		return DefaultMaxRecursionDepth
+	}
+	return *h.MaxRecursionDepth
 }
 
 func (h *Handle) SetErrorHandler(smiErrorHandler types.SmiErrorHandler) *Handle {

@@ -50,7 +50,7 @@ func (n *SmiNode) GetRow() (row SmiNode) {
 	if smiRow == nil {
 		return
 	}
-	return CreateNode(smiRow)
+	return CreateNode(smiRow, n.handle)
 }
 
 func (n *SmiNode) GetColumns() (columns map[string]SmiNode, columnOrder []string) {
@@ -67,7 +67,7 @@ func (n *SmiNode) GetColumns() (columns map[string]SmiNode, columnOrder []string
 			// TODO: error
 			return
 		}
-		column := CreateNode(smiColumn)
+		column := CreateNode(smiColumn, n.handle)
 		columns[column.Name] = column
 		columnOrder = append(columnOrder, column.Name)
 	}
@@ -103,7 +103,7 @@ func (n *SmiNode) GetAugment() (row SmiNode) {
 		return
 	}
 
-	return CreateNode(smiRow)
+	return CreateNode(smiRow, n.handle)
 }
 
 func (n *SmiNode) GetIndex() (index []SmiNode) {
@@ -137,7 +137,7 @@ func (n *SmiNode) GetIndex() (index []SmiNode) {
 			// TODO: error
 			return
 		}
-		index = append(index, CreateNode(smiColumn))
+		index = append(index, CreateNode(smiColumn, n.handle))
 	}
 	return
 }

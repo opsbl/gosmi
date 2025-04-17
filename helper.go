@@ -21,7 +21,7 @@ func (x *HandleHelper) LoadModule(module string) (string, error) {
 func (x *HandleHelper) GetLoadedModules() (modules []SmiModule) {
 	firstModule := x.Handle.GetFirstModule()
 	for smiModule := &firstModule.SmiModule; smiModule != nil; smiModule = smi.GetNextModule(smiModule) {
-		modules = append(modules, CreateModule(smiModule))
+		modules = append(modules, CreateModule(smiModule, x.Handle))
 	}
 	return
 }
@@ -36,7 +36,7 @@ func (x *HandleHelper) GetModule(name string) (SmiModule, error) {
 	if err != nil {
 		return module, err
 	}
-	return CreateModule(&smiModule.SmiModule), nil
+	return CreateModule(&smiModule.SmiModule, x.Handle), nil
 }
 
 func (x *HandleHelper) GetNode(name string, module ...SmiModule) (node SmiNode, err error) {
@@ -53,7 +53,7 @@ func (x *HandleHelper) GetNode(name string, module ...SmiModule) (node SmiNode, 
 		}
 		return
 	}
-	return CreateNode(smiNode), nil
+	return CreateNode(smiNode, x.Handle), nil
 }
 
 func (x *HandleHelper) GetNodeByOID(oid types.Oid) (node SmiNode, err error) {
@@ -62,7 +62,7 @@ func (x *HandleHelper) GetNodeByOID(oid types.Oid) (node SmiNode, err error) {
 		err = fmt.Errorf("could not find node for OID %s", oid)
 		return
 	}
-	return CreateNode(smiNode), nil
+	return CreateNode(smiNode, x.Handle), nil
 }
 
 func (x *HandleHelper) GetType(name string, module ...SmiModule) (outType SmiType, err error) {
@@ -80,7 +80,7 @@ func (x *HandleHelper) GetType(name string, module ...SmiModule) (outType SmiTyp
 		}
 		return
 	}
-	return CreateType(smiType), nil
+	return CreateType(smiType, x.Handle), nil
 }
 
 func NewHandleHelper(handle *smi.Handle) *HandleHelper {

@@ -25,7 +25,7 @@ var DefaultSmiPaths []string = []string{
 	"/usr/local/share/mibs/tubs",
 }
 
-var smiHandle *internal.Handle
+var DefaultSmiHandle *internal.Handle
 
 type Handle = internal.Handle
 type FS = internal.FS
@@ -38,17 +38,17 @@ func NewSmiHandle() *internal.Handle {
 }
 
 func checkInit() {
-	if smiHandle == nil {
+	if DefaultSmiHandle == nil {
 		Init()
 	}
 }
 
 // Init C -> int smiInit(const char *tag)
 func Init(tag ...string) bool {
-	if smiHandle != nil {
+	if DefaultSmiHandle != nil {
 		panic("repeat initialization")
 	}
-	smiHandle = NewSmiHandle()
+	DefaultSmiHandle = NewSmiHandle()
 	var configTag, handleName string
 	_ = handleName // Not used yet
 	if len(tag) > 0 {
@@ -57,7 +57,7 @@ func Init(tag ...string) bool {
 	}
 	// Set to built-in default path, if not Windows
 	if runtime.GOOS != "windows" {
-		smiHandle.SetPath(DefaultSmiPaths...)
+		DefaultSmiHandle.SetPath(DefaultSmiPaths...)
 	}
 
 	// Read global config file, if we can
@@ -80,25 +80,25 @@ func Exit() {
 // SetErrorLevel C -> void smiSetErrorLevel(int level)
 func SetErrorLevel(level int) {
 	checkInit()
-	smiHandle.SetErrorLevel(level)
+	DefaultSmiHandle.SetErrorLevel(level)
 }
 
 // GetFlags C -> int smiGetFlags(void)
 func GetFlags() int {
 	checkInit()
-	return int(smiHandle.GetFlags())
+	return int(DefaultSmiHandle.GetFlags())
 }
 
 // SetFlags C -> void smiSetFlags(int userflags)
 func SetFlags(userflags int) {
 	checkInit()
-	smiHandle.SetFlags(internal.Flags(userflags))
+	DefaultSmiHandle.SetFlags(internal.Flags(userflags))
 }
 
 // GetPath C -> char *smiGetPath(void)
 func GetPath() string {
 	checkInit()
-	return smiHandle.GetPath()
+	return DefaultSmiHandle.GetPath()
 }
 
 // SetPath -> int smiSetPath(const char *path)
@@ -107,13 +107,13 @@ func SetPath(path string) {
 	if len(paths) == 0 {
 		return
 	}
-	smiHandle.SetPath(paths...)
+	DefaultSmiHandle.SetPath(paths...)
 }
 
 // SetSeverity C -> void smiSetSeverity(char *pattern, int severity)
 func SetSeverity(pattern string, severity int) {
 	checkInit()
-	smiHandle.SetSeverity(pattern, severity)
+	DefaultSmiHandle.SetSeverity(pattern, severity)
 }
 
 // ReadConfig -> int smiReadConfig(const char *filename, const char *tag)
@@ -130,9 +130,9 @@ func ReadConfig(filename string, tag ...string) error {
 // SetErrorHandler C -> void smiSetErrorHandler(SmiErrorHandler smiErrorHandler)
 func SetErrorHandler(smiErrorHandler types.SmiErrorHandler) {
 	checkInit()
-	smiHandle.SetErrorHandler(smiErrorHandler)
+	DefaultSmiHandle.SetErrorHandler(smiErrorHandler)
 }
 
-func SetFS(fs ...NamedFS)     { smiHandle.SetFS(fs...) }
-func AppendFS(fs ...NamedFS)  { smiHandle.AppendFS(fs...) }
-func PrependFS(fs ...NamedFS) { smiHandle.PrependFS(fs...) }
+func SetFS(fs ...NamedFS)     { DefaultSmiHandle.SetFS(fs...) }
+func AppendFS(fs ...NamedFS)  { DefaultSmiHandle.AppendFS(fs...) }
+func PrependFS(fs ...NamedFS) { DefaultSmiHandle.PrependFS(fs...) }
