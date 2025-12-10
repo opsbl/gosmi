@@ -1,7 +1,6 @@
 package types
 
-//go:generate enumer -type=BaseType -autotrimprefix -json
-
+//go:generate enumer -type=BaseType -trimprefix=BaseType -json -yaml -output=basetype_string.go
 type BaseType int
 
 const (

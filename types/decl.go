@@ -1,6 +1,6 @@
 package types
 
-//go:generate enumer -type=Decl -autotrimprefix -json
+//go:generate enumer -type=Decl -trimprefix=Decl -json -yaml -output=decl_string.go
 
 type Decl int
 

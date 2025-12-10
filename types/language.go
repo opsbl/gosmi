@@ -1,7 +1,6 @@
 package types
 
-//go:generate enumer -type=Language -autotrimprefix -json
-
+//go:generate enumer -type=Language -trimprefix=Language -json -yaml -output=language_string.go
 type Language int
 
 const (

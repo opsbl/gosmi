@@ -1,6 +1,6 @@
 package types
 
-//go:generate enumer -type=NodeKind -autotrimprefix -json
+//go:generate enumer -type=NodeKind -trimprefix=NodeKind -json -yaml -output=nodekind_string.go
 
 type NodeKind int
 

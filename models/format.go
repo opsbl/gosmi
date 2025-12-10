@@ -1,6 +1,6 @@
 package models
 
-//go:generate enumer -type=Format -autotrimprefix -json
+//go:generate enumer -type=Format -trimprefix=Format -json -yaml -output=format_string.go
 
 import (
 	"fmt"

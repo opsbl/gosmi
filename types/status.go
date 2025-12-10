@@ -1,6 +1,6 @@
 package types
 
-//go:generate enumer -type=Status -autotrimprefix -json
+//go:generate enumer -type=Status -trimprefix=Status -json -yaml -output=status_string.go
 
 type Status int
 
