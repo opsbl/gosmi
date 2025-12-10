@@ -1,0 +1,9 @@
+CYCLE-B-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    cycleA
+        FROM CYCLE-A-MIB;
+
+cycleB OBJECT IDENTIFIER ::= { cycleA 1 }
+
+END

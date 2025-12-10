@@ -1,0 +1,5 @@
+SHARED-MIB DEFINITIONS ::= BEGIN
+
+shared OBJECT IDENTIFIER ::= { iso 10 }
+
+END
