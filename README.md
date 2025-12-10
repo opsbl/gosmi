@@ -33,6 +33,18 @@ name, _ := g.LoadModule("RFC1155-SMI")
 mod, _ := g.GetModule(name)
 node, _ := g.GetNode("sysDescr", mod)
 fmt.Println(node.RenderQualified())
+
+// look up by OID
+byOID, _ := g.GetNodeByOID(types.OidMustFromString("1.3.6.1.2.1.1.1"))
+fmt.Println(byOID.Name, byOID.Oid.String())
+
+// if the node is a table, inspect columns
+ifTable, _ := g.GetNode("ifTable", mod)
+table := ifTable.AsTable()
+for _, colName := range table.ColumnOrder {
+    col := table.Columns[colName]
+    fmt.Println(col.Name, col.Oid.String())
+}
 ```
 
 ### Examples
