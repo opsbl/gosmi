@@ -17,8 +17,8 @@ const (
 	_FormatLowerName_2 = "enumvalue"
 	_FormatName_3      = "Bits"
 	_FormatLowerName_3 = "bits"
-	_FormatName_4      = "String"
-	_FormatLowerName_4 = "string"
+	_FormatName_4      = "Str"
+	_FormatLowerName_4 = "str"
 	_FormatName_5      = "Units"
 	_FormatLowerName_5 = "units"
 	_FormatName_6      = "DurationShort"
@@ -32,7 +32,7 @@ var (
 	_FormatIndex_1 = [...]uint8{0, 8}
 	_FormatIndex_2 = [...]uint8{0, 9}
 	_FormatIndex_3 = [...]uint8{0, 4}
-	_FormatIndex_4 = [...]uint8{0, 6}
+	_FormatIndex_4 = [...]uint8{0, 3}
 	_FormatIndex_5 = [...]uint8{0, 5}
 	_FormatIndex_6 = [...]uint8{0, 13}
 	_FormatIndex_7 = [...]uint8{0, 3}
@@ -69,13 +69,13 @@ func _FormatNoOp() {
 	_ = x[FormatEnumName-(2)]
 	_ = x[FormatEnumValue-(4)]
 	_ = x[FormatBits-(8)]
-	_ = x[FormatString-(16)]
+	_ = x[FormatStr-(16)]
 	_ = x[FormatUnits-(32)]
 	_ = x[FormatDurationShort-(64)]
 	_ = x[FormatAll-(223)]
 }
 
-var _FormatValues = []Format{FormatNone, FormatEnumName, FormatEnumValue, FormatBits, FormatString, FormatUnits, FormatDurationShort, FormatAll}
+var _FormatValues = []Format{FormatNone, FormatEnumName, FormatEnumValue, FormatBits, FormatStr, FormatUnits, FormatDurationShort, FormatAll}
 
 var _FormatNameToValueMap = map[string]Format{
 	_FormatName_0[0:4]:       FormatNone,
@@ -86,8 +86,8 @@ var _FormatNameToValueMap = map[string]Format{
 	_FormatLowerName_2[0:9]:  FormatEnumValue,
 	_FormatName_3[0:4]:       FormatBits,
 	_FormatLowerName_3[0:4]:  FormatBits,
-	_FormatName_4[0:6]:       FormatString,
-	_FormatLowerName_4[0:6]:  FormatString,
+	_FormatName_4[0:3]:       FormatStr,
+	_FormatLowerName_4[0:3]:  FormatStr,
 	_FormatName_5[0:5]:       FormatUnits,
 	_FormatLowerName_5[0:5]:  FormatUnits,
 	_FormatName_6[0:13]:      FormatDurationShort,
@@ -101,7 +101,7 @@ var _FormatNames = []string{
 	_FormatName_1[0:8],
 	_FormatName_2[0:9],
 	_FormatName_3[0:4],
-	_FormatName_4[0:6],
+	_FormatName_4[0:3],
 	_FormatName_5[0:5],
 	_FormatName_6[0:13],
 	_FormatName_7[0:3],

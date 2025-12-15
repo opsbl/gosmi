@@ -120,7 +120,7 @@ func GetInetAddressFormatted(value interface{}, flags Format) (v Value) {
 		return
 	}
 	v.Raw = bytes
-	if flags&FormatString == 0 {
+	if flags&FormatStr == 0 {
 		return
 	}
 	numBytes := len(bytes)
@@ -157,13 +157,13 @@ func GetOctetStringFormatted(value interface{}, flags Format, format string) (v 
 		bytes = val
 	default:
 		v.Raw = val
-		if flags&FormatString != 0 {
+		if flags&FormatStr != 0 {
 			v.Formatted = fmt.Sprintf("%v", val)
 		}
 		return
 	}
 	v.Raw = bytes
-	if flags&FormatString == 0 {
+	if flags&FormatStr == 0 {
 		return
 	}
 	switch format {
