@@ -6,10 +6,10 @@ import (
 	"strings"
 )
 
-func GetIntFormatted(value interface{}, flags Format, format string) Value {
+func GetIntFormatted(value interface{}, flags FormatKind, format string) Value {
 	var formatted string
 	intVal, err := ToInt64(value)
-	if err == nil && flags != FormatNone {
+	if err == nil && flags != FormatKindNone {
 		formatted = IntegerDisplayHint(format, intVal)
 	}
 	return Value{
@@ -19,7 +19,7 @@ func GetIntFormatted(value interface{}, flags Format, format string) Value {
 	}
 }
 
-func GetIntFormatter(flags Format, format string) (f ValueFormatter) {
+func GetIntFormatter(flags FormatKind, format string) (f ValueFormatter) {
 	return func(value interface{}) Value {
 		return GetIntFormatted(value, flags, format)
 	}

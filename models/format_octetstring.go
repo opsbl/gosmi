@@ -107,7 +107,7 @@ func getBytes(value interface{}) (bytes []byte, ok bool) {
 	return
 }
 
-func GetInetAddressFormatted(value interface{}, flags Format) (v Value) {
+func GetInetAddressFormatted(value interface{}, flags FormatKind) (v Value) {
 	v.Format = flags
 	if str, ok := value.(string); ok {
 		v.Raw = value
@@ -120,7 +120,7 @@ func GetInetAddressFormatted(value interface{}, flags Format) (v Value) {
 		return
 	}
 	v.Raw = bytes
-	if flags&FormatString == 0 {
+	if flags&FormatKindString == 0 {
 		return
 	}
 	numBytes := len(bytes)
@@ -138,13 +138,13 @@ func GetInetAddressFormatted(value interface{}, flags Format) (v Value) {
 	return
 }
 
-func GetInetAddressFormatter(flags Format) (f ValueFormatter) {
+func GetInetAddressFormatter(flags FormatKind) (f ValueFormatter) {
 	return func(value interface{}) Value {
 		return GetInetAddressFormatted(value, flags)
 	}
 }
 
-func GetOctetStringFormatted(value interface{}, flags Format, format string) (v Value) {
+func GetOctetStringFormatted(value interface{}, flags FormatKind, format string) (v Value) {
 	v.Format = flags
 	var bytes []byte
 	switch val := value.(type) {
@@ -157,13 +157,13 @@ func GetOctetStringFormatted(value interface{}, flags Format, format string) (v 
 		bytes = val
 	default:
 		v.Raw = val
-		if flags&FormatString != 0 {
+		if flags&FormatKindString != 0 {
 			v.Formatted = fmt.Sprintf("%v", val)
 		}
 		return
 	}
 	v.Raw = bytes
-	if flags&FormatString == 0 {
+	if flags&FormatKindString == 0 {
 		return
 	}
 	switch format {
@@ -184,7 +184,7 @@ func GetOctetStringFormatted(value interface{}, flags Format, format string) (v 
 	return
 }
 
-func GetOctetStringFormatter(flags Format, format string) (f ValueFormatter) {
+func GetOctetStringFormatter(flags FormatKind, format string) (f ValueFormatter) {
 	return func(value interface{}) Value {
 		return GetOctetStringFormatted(value, flags, format)
 	}

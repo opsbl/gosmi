@@ -1,6 +1,6 @@
 package models
 
-//go:generate enumer -type=Format -trimprefix=Format -json -yaml -output=format_string.go
+//go:generate enumer -type=FormatKind -trimprefix=FormatKind -json -yaml -output=format_string.go
 
 import (
 	"fmt"
@@ -10,23 +10,23 @@ import (
 	"github.com/opsbl/gosmi/types"
 )
 
-type Format byte
+type FormatKind byte
 
 const (
-	FormatNone     Format = 0
-	FormatEnumName Format = 1 << iota
-	FormatEnumValue
-	FormatBits
-	FormatString
-	FormatUnits
-	FormatDurationShort
-	FormatAll Format = 0xff & ^FormatUnits
+	FormatKindNone     FormatKind = 0
+	FormatKindEnumName FormatKind = 1 << iota
+	FormatKindEnumValue
+	FormatKindBits
+	FormatKindString
+	FormatKindUnits
+	FormatKindDurationShort
+	FormatKindAll FormatKind = 0xff & ^FormatKindUnits
 )
 
-func ResolveFormat(formats []Format, defaultFormat ...Format) (format Format) {
+func ResolveFormat(formats []FormatKind, defaultFormat ...FormatKind) (format FormatKind) {
 	if len(formats) == 0 {
 		if len(defaultFormat) == 0 {
-			return FormatAll
+			return FormatKindAll
 		}
 		return defaultFormat[0]
 	}
@@ -37,7 +37,7 @@ func ResolveFormat(formats []Format, defaultFormat ...Format) (format Format) {
 }
 
 type Value struct {
-	Format    Format
+	Format    FormatKind
 	Formatted string
 	Raw       interface{}
 }
@@ -74,7 +74,7 @@ func (v Value) Uint64() uint64 {
 }
 
 func (v Value) String() string {
-	if v.Format != FormatNone {
+	if v.Format != FormatKindNone {
 		return v.Formatted
 	}
 	if v.Raw == nil {
@@ -123,31 +123,31 @@ func ToInt64(value interface{}) (val int64, err error) {
 
 type ValueFormatter func(interface{}) Value
 
-func (n Node) FormatValue(value interface{}, flags ...Format) Value {
+func (n Node) FormatValue(value interface{}, flags ...FormatKind) Value {
 	return n.Type.FormatValue(value, flags...)
 }
 
-func (n Node) GetValueFormatter(flags ...Format) ValueFormatter {
+func (n Node) GetValueFormatter(flags ...FormatKind) ValueFormatter {
 	return n.Type.GetValueFormatter(flags...)
 }
 
-func (n ScalarNode) FormatValue(value interface{}, flags ...Format) Value {
+func (n ScalarNode) FormatValue(value interface{}, flags ...FormatKind) Value {
 	return n.Type.FormatValue(value, flags...)
 }
 
-func (n ScalarNode) GetValueFormatter(flags ...Format) ValueFormatter {
+func (n ScalarNode) GetValueFormatter(flags ...FormatKind) ValueFormatter {
 	return n.Type.GetValueFormatter(flags...)
 }
 
-func (n ColumnNode) FormatValue(value interface{}, flags ...Format) Value {
+func (n ColumnNode) FormatValue(value interface{}, flags ...FormatKind) Value {
 	return n.Type.FormatValue(value, flags...)
 }
 
-func (n ColumnNode) GetValueFormatter(flags ...Format) ValueFormatter {
+func (n ColumnNode) GetValueFormatter(flags ...FormatKind) ValueFormatter {
 	return n.Type.GetValueFormatter(flags...)
 }
 
-func (t Type) FormatValue(value interface{}, flags ...Format) Value {
+func (t Type) FormatValue(value interface{}, flags ...FormatKind) Value {
 	formatFlags := ResolveFormat(flags)
 	switch t.BaseType {
 	case types.BaseTypeOctetString:
@@ -171,7 +171,7 @@ func (t Type) FormatValue(value interface{}, flags ...Format) Value {
 	return GetIntFormatted(value, formatFlags, t.Format)
 }
 
-func (t Type) GetValueFormatter(flags ...Format) ValueFormatter {
+func (t Type) GetValueFormatter(flags ...FormatKind) ValueFormatter {
 	formatFlags := ResolveFormat(flags)
 	switch t.BaseType {
 	case types.BaseTypeOctetString:

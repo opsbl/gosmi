@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GetDurationFormatted(value interface{}, flags Format) (v Value) {
+func GetDurationFormatted(value interface{}, flags FormatKind) (v Value) {
 	intVal, err := ToInt64(value)
 	if err != nil {
 		return
@@ -14,10 +14,10 @@ func GetDurationFormatted(value interface{}, flags Format) (v Value) {
 	duration := time.Duration(intVal * 1e7)
 	v.Format = flags
 	v.Raw = duration
-	if flags == FormatNone {
+	if flags == FormatKindNone {
 		return
 	}
-	if flags&FormatDurationShort > 0 {
+	if flags&FormatKindDurationShort > 0 {
 		v.Formatted = DurationFormat(duration)
 	} else {
 		v.Formatted = DurationFormatLong(duration)
@@ -25,7 +25,7 @@ func GetDurationFormatted(value interface{}, flags Format) (v Value) {
 	return
 }
 
-func GetDurationFormatter(flags Format) (f ValueFormatter) {
+func GetDurationFormatter(flags FormatKind) (f ValueFormatter) {
 	return func(value interface{}) Value {
 		return GetDurationFormatted(value, flags)
 	}

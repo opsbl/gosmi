@@ -82,7 +82,7 @@ func (t Type) String() string {
 	if t.BaseType.String() != typeStr {
 		typeStr += "<" + t.BaseType.String() + ">"
 	}
-	return fmt.Sprintf("Type[%s Status=%s, Format=%s, Units=%s]", typeStr, t.Status, t.Format, t.Units)
+	return fmt.Sprintf("Type[%s Status=%s, FormatKind=%s, Units=%s]", typeStr, t.Status, t.Format, t.Units)
 }
 
 func (t Type) indexValueEnum(value interface{}) (types.Oid, error) {

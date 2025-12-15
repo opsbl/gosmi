@@ -4,25 +4,25 @@ import (
 	"fmt"
 )
 
-func GetEnumFormatted(value interface{}, flags Format, enum *Enum) (v Value) {
+func GetEnumFormatted(value interface{}, flags FormatKind, enum *Enum) (v Value) {
 	intVal, err := ToInt64(value)
 	v.Format = flags
 	v.Raw = intVal
 	if err != nil {
 		return
 	}
-	if flags&FormatEnumName != 0 {
+	if flags&FormatKindEnumName != 0 {
 		v.Formatted = enum.Name(intVal)
-		if flags&FormatEnumValue != 0 {
+		if flags&FormatKindEnumValue != 0 {
 			v.Formatted += fmt.Sprintf("(%d)", intVal)
 		}
-	} else if flags&FormatEnumValue != 0 {
+	} else if flags&FormatKindEnumValue != 0 {
 		v.Formatted = fmt.Sprintf("%d", intVal)
 	}
 	return
 }
 
-func GetEnumFormatter(flags Format, enum *Enum) (f ValueFormatter) {
+func GetEnumFormatter(flags FormatKind, enum *Enum) (f ValueFormatter) {
 	return func(value interface{}) Value {
 		return GetEnumFormatted(value, flags, enum)
 	}
